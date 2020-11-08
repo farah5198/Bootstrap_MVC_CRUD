@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -39,23 +40,37 @@ public class RomanController {
 	}
 	
 	@RequestMapping("/ListeRomans")
-	public String listeRomans(ModelMap modelMap)
+	public String listeRomans(ModelMap modelMap,
+			@RequestParam (name="page",defaultValue = "0") int page,
+			@RequestParam (name="size", defaultValue = "4") int size)
+
 	{
-	    List<Roman> roms = romanService.getAllRomans();
-	    modelMap.addAttribute("romans", roms);
-	    return "listeRomans";
+		Page<Roman> roms = romanService.getAllRomansParPage(page, size);
+		
+		modelMap.addAttribute("romans", roms);
+		modelMap.addAttribute("pages", new int[roms.getTotalPages()]);
+		modelMap.addAttribute("currentPage", page);
+		
+		return "listeRomans";
 	}
 	
 	
 	@RequestMapping("/supprimerRoman")
 	public String supprimerRoman(@RequestParam("id") Long id,
-	 ModelMap modelMap)
-	{
+	                             ModelMap modelMap,
+	                             @RequestParam (name="page",defaultValue = "0") int page,
+	                             @RequestParam (name="size", defaultValue = "4") int size)
+	  {
 	romanService.deleteRomanById(id);
-	List<Roman> roms = romanService.getAllRomans();
-	modelMap.addAttribute("romans", roms);
+        	Page<Roman> roms = romanService.getAllRomansParPage(page,size);
+			modelMap.addAttribute("romans", roms);
+			modelMap.addAttribute("pages", new int[roms.getTotalPages()]);
+			modelMap.addAttribute("currentPage", page);
+			modelMap.addAttribute("size", size);
 	return "listeRomans";
 	}
+	
+	
 	
 	@RequestMapping("/modifierRoman")
 	public String editerRoman(@RequestParam("id") Long id,ModelMap modelMap)

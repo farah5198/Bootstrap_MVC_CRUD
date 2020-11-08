@@ -2,6 +2,8 @@ package com.isetN.romans.service;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.isetN.romans.entities.Roman;
@@ -45,5 +47,10 @@ public class RomanServiceImpl implements RomanService{
 	public List<Roman> getAllRomans() {
 		return romanRepository.findAll();
 	}
+	@Override
+	public Page<Roman> getAllRomansParPage(int page, int size) {
+	    return romanRepository.findAll(PageRequest.of(page, size));
+	}
+
 
 }

@@ -6,15 +6,21 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 
 import com.isetN.romans.entities.Roman;
 import com.isetN.romans.repos.RomanRepository;
+import com.isetN.romans.service.RomanService;
+import com.isetN.romans.service.RomanServiceImpl;
 
 @SpringBootTest
 class RomansApplicationTests {
 
 	@Autowired
 	private RomanRepository romanRepository;
+	
+	@Autowired
+	private RomanService romanService;
 	 
 	@Test
 	public void testCreateRoman() {
@@ -55,7 +61,22 @@ class RomansApplicationTests {
 	 System.out.println(r);
 	 }
 	 }
-
+	 
+	 @Test
+	 public void testFindByTitreRomanContains()
+	 {
+	 Page<Roman> prods = romanService.getAllRomansParPage(0,2);
+	 System.out.println(prods.getSize());
+	 System.out.println(prods.getTotalElements());
+	 System.out.println(prods.getTotalPages());
+	 prods.getContent().forEach(p -> {System.out.println(p.toString());
+	  });
+	 /*ou bien
+	 for (Roman r : roms)
+	 {
+	 System.out.println(r);
+	 } */
+	 }
 
 
 
